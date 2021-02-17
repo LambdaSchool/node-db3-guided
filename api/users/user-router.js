@@ -4,6 +4,8 @@ const db = require("../../data/db-config.js");
 
 const router = express.Router();
 
+const User = require("./user-model.js")
+
 router.get("/", (req, res) => {
   db("users")
     .then(users => {
@@ -32,6 +34,15 @@ router.get("/:id", (req, res) => {
       res.status(500).json({ message: "Failed to get user" });
     });
 });
+
+router.get("/:id/posts", async (req,res)=>{
+  try{
+    const posts = await User.getUserPosts(req.params.id)
+    res.json(posts)
+  }catch(e){
+    res.status(500).json(e.message)
+  }
+})
 
 router.post("/", (req, res) => {
   const userData = req.body;
